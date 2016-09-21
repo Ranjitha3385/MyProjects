@@ -93,12 +93,14 @@ public class SweetyLogin {
 	//driver.findElement(By.xpath("//input[@value='Submit']")).click();
 	
 	//Verify for multiple entries
+	
 	String[] array1 = { "2", "4", "5", "6", "10" };
+	try{
 	for (int i = 0; i<=4; i++)
 	{
 		//driver.findElement(By.xpath("//a[@class='btn btn-primary']")).click();
-		//WebElement element1 = (new WebDriverWait(driver, 10))
-				//.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//input[@id='entry_level']")));
+		WebElement element1 = (new WebDriverWait(driver, 10))
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//input[@id='entry_level']")));
 		
 		
 		Select year1=new Select(driver.findElement(By.xpath("//select[@id='entry_recorded_at_1i']")));
@@ -106,12 +108,43 @@ public class SweetyLogin {
 		Select month1=new Select(driver.findElement(By.xpath("//*[@id='entry_recorded_at_2i']")));
 		month1.selectByValue("10");
 		Select day1=new Select(driver.findElement(By.xpath("//*[@id='entry_recorded_at_3i']")));
-		day1.selectByValue("2");
+		day1.selectByValue("7");
 		
 		driver.findElement(By.xpath("//input[@id='entry_level']")).sendKeys(array1[i]);
 		driver.findElement(By.xpath("//input[@value='Submit']")).click();
+		driver.findElement(By.xpath("//a[@class='btn btn-primary']")).click();
 	}
-		// driver.close();
+		// Verify Maximum entry
+	}catch (Throwable t) {
+				String actualErrorMsg=driver.findElement(By.xpath("//div[@class='alert alert-warning fade in']")).getText();
+				String expectedErrornMsg="Maximum entries reached for this date.";
+				Assert.assertEquals(actualErrorMsg, expectedErrornMsg);
+				System.out.println(" Maximum entry error Msg "+ actualErrorMsg);
+	}
+	
+	
+	//Verify Monthly Reports
+	driver.findElement(By.xpath("//a[text()='Reports']")).click();
+	driver.findElement(By.xpath("//a[text()='Monthly']")).click();
+	
+	String actualmonthlyMsg=driver.findElement(By.xpath("//h3[contains(text(),'Monthly Report as of for')]")).getText();
+	String expectedmonthlyMsg="Monthly Report as of for "+currentmonth;
+	Assert.assertEquals(actualmonthlyMsg, expectedmonthlyMsg);
+	System.out.println(" Display of monthly Report:"+ actualmonthlyMsg);
+	
+	//Verify Columns in Reports
+	String col1=driver.findElement(By.xpath("//th[text()='Min']")).getText();
+	System.out.println(" Report contains:"+ col1);
+	String col2=driver.findElement(By.xpath("//th[text()='Max']")).getText();
+	System.out.println(" Report contains:"+ col2);
+	String col3=driver.findElement(By.xpath("//th[text()='Avg']")).getText();
+	System.out.println(" Report contains:"+ col3);
+	
+	
+	//Verify Daily Reports
+	driver.findElement(By.xpath("//a[text()='Reports']")).click();
+	driver.findElement(By.xpath("//a[text()='Daily']")).click();
+	driver.close();
 		
 	}
 
